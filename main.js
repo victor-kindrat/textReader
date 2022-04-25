@@ -1,8 +1,31 @@
+let state = 0;
+let speedReading = 500;
 let place = document.getElementById('place');
 let area = document.getElementById('area');
 let add = document.getElementById('add');
+let stateLocal = localStorage.getItem('state') || 0;
 
-let speedReading = 500;
+function nightTrigger(state) {
+    if (state === 1) {
+        // light 
+        $('#wrap').attr('class', 'wrap light');
+        $('.nightMode').css('animation', 'change 0.4s 1 linear alternate forwards');
+        setTimeout(() => {
+            $('.nightMode').css('animation', 'none');
+        }, 410);
+    } else if (state === 0) {
+        // dark 
+        $('#wrap').attr('class', 'wrap dark');
+        $('.nightMode').css('animation', 'change 0.4s 1 linear alternate-reverse forwards');
+        setTimeout(() => {
+            $('.nightMode').css('animation', 'none');
+        }, 410);
+    }
+}
+
+nightTrigger(parseInt(stateLocal));
+state = parseInt(stateLocal);
+
 speedView.innerText = speedReading + ' с';
 
 add.onclick = () => {
@@ -12,13 +35,13 @@ add.onclick = () => {
         let n = 0;
         let txt = cleanText(area.value);
         let arr = clear(txt.split(' '));
-        x = setInterval(function () {
+        x = setInterval(function() {
             if (n != arr.length) {
                 place.innerHTML = setFocus(arr[n]);
                 n++
             } else {
                 place.innerHTML = 'Вітаю із прочитанням!';
-                setTimeout(function () {
+                setTimeout(function() {
                     place.innerHTML = ' ';
                     formTrigger(0)
                     clearInterval(x);
@@ -28,7 +51,7 @@ add.onclick = () => {
             }
         }, speedReading)
         let state = 0;
-        document.body.onkeydown = function (e) {
+        document.body.onkeydown = function(e) {
             if (e.keyCode === 32) {
                 if (state === 0) {
                     place.innerHTML = 'Призупинено';
@@ -39,13 +62,13 @@ add.onclick = () => {
                 } else {
                     speed.style.display = 'none';
                     speedView.style.display = 'none';
-                    x = setInterval(function () {
+                    x = setInterval(function() {
                         if (n != arr.length) {
                             place.innerHTML = setFocus(arr[n]);
                             n++
                         } else {
                             place.innerHTML = 'Вітаю із прочитанням!';
-                            setTimeout(function () {
+                            setTimeout(function() {
                                 place.innerHTML = ' ';
                                 formTrigger(0)
                                 clearInterval(x);
@@ -111,38 +134,21 @@ function formTrigger(state) {
     }
 }
 
-speed.oninput = function () {
+speed.oninput = function() {
     speedView.innerHTML = this.value + ' с';
     speedReading = this.value;
 }
 
-function nightTrigger(state) {
-    if (state === 1) {
-        // light 
-        $('#wrap').attr('class', 'wrap light');
-        $('.nightMode').css('animation', 'change 0.4s 1 linear alternate forwards');
-        setTimeout(() => {
-            $('.nightMode').css('animation', 'none');
-        }, 410);
-    } else if (state === 0) {
-        // dark 
-        $('#wrap').attr('class', 'wrap dark');
-        $('.nightMode').css('animation', 'change 0.4s 1 linear alternate-reverse forwards');
-        setTimeout(() => {
-            $('.nightMode').css('animation', 'none');
-        }, 410);
-    }
-}
 
-let state = 0;
-
-nightMode.onclick = function () {
+nightMode.onclick = function() {
     if (state === 0) {
         nightTrigger(1);
         state = 1;
+        localStorage.setItem('state', '1');
     } else {
         nightTrigger(0);
         state = 0
+        localStorage.setItem('state', '0');
     }
 }
 
